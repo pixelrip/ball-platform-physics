@@ -17,6 +17,8 @@ function Ball.new(opts)
 	self.vx = 0
 	self.vy = 0
 	self.r = opts.r or 2
+	self.bot = self.y + self.r
+	self.top = self.y - self.r
 	self.col = opts.col or 7
 	self.gravity = opts.gravity or 0.2
 
@@ -33,20 +35,23 @@ function Ball:update(platforms)
 	self.x += self.vx
 	self.y += self.vy
 
+	-- update ball bounds
+	self.bot = self.y + self.r
+	self.top = self.y - self.r
+
 	-- check for collisions with platforms
 	for platform in all(platforms) do
-		if self:_check_collision(platform) then
-			local _prev_vy = self.vy
-			local _platform_y_at_ball = (platform.m * self.x) + platform.c
-
+		local platform_y_at_ball = self:_check_collision(platform)
 	
+		if platform_y_at_ball then
+
 			-- Correct Position
-			self.y = _platform_y_at_ball - self.r
+			self.y = platform_y_at_ball - self.r
 
 			-- simple collision response: invert y velocity
 			self.vy = _prev_vy * -platform.bounce
 
-			self.vx += platform.m * _prev_vy * 1 -- Tuning?
+			self.vx += platform.m * _prev_vy * 0.5 -- Tuning factor
 		end			
 	end
 
@@ -60,10 +65,11 @@ end
 function Ball:_check_collision(platform)
 	local platform_y_at_ball = (platform.m * self.x) + platform.c
 
-	if self.y + self.r >= platform_y_at_ball and 
+	if self.bot >= platform_y_at_ball and
+		self.top <= platform.lowest_y and
 		self.x >= platform.x1 and
 		self.x <= platform.x2 then
-		return true
+		return platform_y_at_ball
 	end
 
 	return false

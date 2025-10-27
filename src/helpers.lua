@@ -19,3 +19,7 @@ function get_y_intercept(m, x, y)
     -- c = y - (m * x)
     return y - (m * x)
 end
+
+function log(txt)
+    printh(txt, "log.p8l")
+end

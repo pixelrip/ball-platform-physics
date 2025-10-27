@@ -16,6 +16,7 @@ function Platform.new(opts)
 	self.y1 = opts.y1
 	self.x2 = opts.x2
 	self.y2 = opts.y2
+	self.lowest_y = max(self.y1, self.y2)
 	self.col = opts.col or 7
 	self.bounce = opts.bounce or 0.8
 	
