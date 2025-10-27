@@ -44,12 +44,15 @@ function Ball:update(platforms)
 		local platform_y_at_ball = self:_check_collision(platform)
 	
 		if platform_y_at_ball then
+			-- Calculate velocity at the balls x position on the platform
+			local t = (self.x - platform.x1) / (platform.x2 - platform.x1)
+			local platform_vy_at_ball = platform.vy1 + t * (platform.vy2 - platform.vy1)
 
 			-- Correct Position
 			self.y = platform_y_at_ball - self.r
 
 			-- simple collision response: invert y velocity
-			self.vy = _prev_vy * -platform.bounce
+			self.vy = _prev_vy * -platform.bounce + platform_vy_at_ball * 0.5 --Tuning factor
 
 			self.vx += platform.m * _prev_vy * 0.5 -- Tuning factor
 		end			

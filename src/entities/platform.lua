@@ -39,6 +39,9 @@ function Platform.new(opts)
 end
 
 function Platform:update()
+	local prev_y1 = self.y1
+	local prev_y2 = self.y2
+
 	local t1 = t() * self.speed_y1
 	local t2 = t() * self.speed_y2
 	local y1_offset = cos(t1) * self.amplitude_y1
@@ -47,6 +50,10 @@ function Platform:update()
 	self.y1 = self.base_y1 + y1_offset
 	self.y2 = self.base_y2 + y2_offset
 
+	-- Calculate a velocity at each endpoint
+	self.vy1 = self.y1 - prev_y1
+	self.vy2 = self.y2 - prev_y2
+	
 	self.lowest_y = max(self.y1, self.y2)
 	self.m = get_slope(self.x1, self.y1, self.x2, self.y2)
 	self.c = get_y_intercept(self.m, self.x1, self.y1)
