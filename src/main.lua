@@ -5,19 +5,14 @@ function _init()
 	platforms = {}
 
 	-- Create a couple of balls
-	add(balls, Ball.new({
-		x = 10,
-		y = 0,
-		r = 2,
-		col = 7,
-	}))
-
-	add(balls, Ball.new({
-		x = 110,
-		y = 0,
-		r = 2,
-		col = 10,
-	}))
+	for i = 1, 15 do
+		add(balls, Ball.new({
+			x = rnd_between(10, 120),
+			y = 0,
+			r = 2,
+			col = i
+		}))
+	end
 
 	-- Creat a couple of platforms
 
@@ -50,10 +45,14 @@ function _update()
 	for ball in all(balls) do
 		ball:update(platforms)
 	end
+
+	for platform in all(platforms) do
+		platform:update()
+	end
 end
 
 function _draw()
-	cls(1)
+	cls(0)
 
 	for ball in all(balls) do
 		ball:draw()
